@@ -4,7 +4,7 @@ import tkinter as tk
 from tkinter import messagebox
 from PIL import Image, ImageTk
 from itertools import count, cycle
-
+from time import strftime 
 from requests.api import get
 
 def getWeather():
@@ -14,7 +14,7 @@ def getWeather():
     weather = data["weather"][0]["description"]
     temp = data["main"]["temp"]
     temp = round(temp - 273.15, 2)
-    messagebox.showinfo("Weather", "Weather in " + city + " is " + weather + " with a temperature of " + str(temp) + "°C")
+    weatherLabel.config(text=weather.title() + ' with a \ntemperature of ' + str(temp) + '°C')
 
 def getLocation():
     global city
@@ -23,6 +23,11 @@ def getLocation():
     data = response.json()
     city = data["city"]
     displayCurrentCity.config(text="Your current city is " + city)
+
+def time(): 
+    string = strftime('%H:%M') 
+    timeDisplay.config(text = string) 
+    timeDisplay.after(1000, time) 
 
 class ImageLabel(tk.Label):
     """
@@ -66,27 +71,38 @@ screen.geometry("250x400")
 screen.resizable(width=False, height=False)
 screen.title(" Weather App")
 screen.config(bg="#013368")
+screen.iconbitmap("cloud.ico")
 
 displayFrame = tk.Frame(screen, bg="#013368")
-displayFrame.grid(columnspan="2", row="0", padx=(22,0), pady=(15,0))
+displayFrame.grid(columnspan="2", row="0", padx=(0,5), pady=(15,0))
 
 displayCurrentCity = tk.Label(displayFrame, bg="#013368")
-displayCurrentCity.grid(columnspan = "2", row = "2", padx=5, pady=(0,0))
-displayCurrentCity.config(text = "", font=("Playfair Display",12), fg="white")
+displayCurrentCity.grid(columnspan = "2", row = "3", padx=0, pady=(5,0))
+displayCurrentCity.config(text = "", font=("Segoe UI",10), fg="white")
 getLocation()
 
 weatherDisplay = tk.Label(displayFrame, bg="#013368")
-weatherDisplay.grid(columnspan = "2", row = "1", padx=5, pady=(10,0))
+weatherDisplay.grid(columnspan = "2", row = "1", padx=0, pady=(10,0))
 weatherDisplay.config(text = "Weather App", font=("Segoe UI Bold",15), fg="white")
 
-getWeatherButton = tk.Button(displayFrame, bg="white")
-getWeatherButton.grid(columnspan = "2", row = "3", padx=5, pady=5)
-getWeatherButton.config(text = "Get Weather", font=("Segoe UI light",10), relief="solid", bd="1")
-getWeatherButton.config(command = getWeather)
+timeDisplay = tk.Label(displayFrame, bg="#013368")
+timeDisplay.grid(columnspan = "2", row = "2", padx=0, pady=(2,0))
+timeDisplay.config(text = "00:00", font=("Segoe UI Bold",25), fg="white")
 
-lbl = ImageLabel(screen, width=200, height=200)
-lbl.grid(columnspan = "2", row = "4", padx=(22,0), pady=(0,0))
+weatherLabel = tk.Label(displayFrame, bg="#013368")
+weatherLabel.grid(columnspan = "2", row = "4", padx=0, pady=(0,4))
+weatherLabel.config(text = "", font=("Playfair Display",14), fg="white")
+
+getWeather()
+
+lbl = ImageLabel(screen, width=230, height=200)
+lbl.grid(columnspan = "2", row = "4", padx=(0,20), pady=(0,0))
 lbl.load('gif.gif')
 
+copyright = tk.Label(screen, bg="#013368")
+copyright.grid(columnspan = "2", row = "4", padx=0, pady=(140,0))
+copyright.config(text = "Copyright © Khoa Nguyễn", font=("Segoe UI",7), fg="white")
+
+time()
 screen.mainloop()
 
