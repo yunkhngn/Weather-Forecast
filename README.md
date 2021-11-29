@@ -1,6 +1,6 @@
 # Weather-Forecast
 
-## **Weather Forecast **
+## **Weather Forecast**
 
 ## **Creator:** _Khoa Nguyễn_
 
